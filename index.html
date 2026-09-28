@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guillermo Gómez Conejero · Computer Engineering Student</title>
+  <meta name="description" content="Third-year Computer Engineering student in Seville, Spain, focused on software development and application security. Open to internships.">
+  <meta property="og:title" content="Guillermo Gómez Conejero">
+  <meta property="og:description" content="Computer Engineering student · Software development & application security">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://goco36.github.io/">
+  <meta name="theme-color" content="#0f1115">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1115'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' fill='%236cb6ff' text-anchor='middle'%3EGG%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#top" aria-label="Back to top">GG</a>
+      <nav aria-label="Main">
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#project">Project</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero container" id="top">
+      <p class="eyebrow">Seville, Spain · Open to internships</p>
+      <h1>Guillermo Gómez Conejero</h1>
+      <p class="lead">
+        Third-year Computer Engineering student building a foundation in
+        <strong>software development</strong> and <strong>application security</strong>.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#project">View project</a>
+        <a class="btn" href="https://github.com/Goco36" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/guillermo-gomez-conejero-263369376/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section container" id="about">
+      <h2><span class="num">01</span> About</h2>
+      <p>
+        I study Computer Engineering (IT track) and I'm in my third year. I work with Python, Java,
+        JavaScript and SQL, and I'm still deepening all of them through coursework and my own projects.
+      </p>
+      <p>
+        The side of software I find most interesting is security: how systems are exposed, and how to check
+        for it. I'm starting to build small, well-documented tools in that space, and I'm looking for an
+        internship where I can keep learning while contributing real work.
+      </p>
+    </section>
+
+    <!-- Project -->
+    <section class="section container" id="project">
+      <h2><span class="num">02</span> Featured project</h2>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>security-headers-checker</h3>
+          <a class="card-link" href="https://github.com/Goco36/security-headers-checker" target="_blank" rel="noopener noreferrer">Source code →</a>
+        </div>
+
+        <p>
+          A Python command-line tool that checks a URL for HTTP security headers and reports which ones are
+          missing, which look misconfigured, and which reveal information about the server.
+        </p>
+
+        <figure class="terminal" aria-label="Example output of the tool">
+          <div class="terminal-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+<pre><code><span class="prompt">$</span> python -m hdrcheck http://localhost:8000
+
+HEADER                       STATUS     SEVERITY
+------------------------------------------------
+Strict-Transport-Security    <span class="bad">missing</span>    high
+Content-Security-Policy      <span class="bad">missing</span>    high
+X-Content-Type-Options       <span class="bad">missing</span>    medium
+Server                       <span class="warn">leak</span>       info</code></pre>
+        </figure>
+
+        <div class="card-grid">
+          <div>
+            <h4>What it does</h4>
+            <ul>
+              <li>Checks six recommended security headers</li>
+              <li>Validates values such as HSTS <code>max-age</code></li>
+              <li>Flags headers that leak server details</li>
+              <li>Table or JSON output, CI-friendly exit codes</li>
+            </ul>
+          </div>
+          <div>
+            <h4>What I learned</h4>
+            <ul>
+              <li>Server input can't be trusted: a malformed value crashed an early version, now covered by a test</li>
+              <li>Why every network request needs a timeout</li>
+              <li>Separating concerns with a custom exception</li>
+            </ul>
+          </div>
+        </div>
+
+        <ul class="tags" aria-label="Technologies used">
+          <li>Python</li>
+          <li>requests</li>
+          <li>argparse</li>
+          <li>pytest</li>
+        </ul>
+      </article>
+
+      <p class="note">More projects coming as I build them.</p>
+    </section>
+
+    <!-- Skills -->
+    <section class="section container" id="skills">
+      <h2><span class="num">03</span> Skills</h2>
+      <div class="skills-grid">
+        <div>
+          <h3>Programming</h3>
+          <ul class="tags">
+            <li>Python</li>
+            <li>Java</li>
+            <li>JavaScript</li>
+            <li>SQL</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Web</h3>
+          <ul class="tags">
+            <li>HTML</li>
+            <li>CSS</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Tools</h3>
+          <ul class="tags">
+            <li>Git</li>
+            <li>GitHub</li>
+            <li>pytest</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Languages</h3>
+          <ul class="plain">
+            <li>Spanish <span class="muted">· native</span></li>
+            <li>English <span class="muted">· C1</span></li>
+            <li>German <span class="muted">· C1</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section container" id="contact">
+      <h2><span class="num">04</span> Contact</h2>
+      <p>I'm open to internship opportunities. The quickest way to reach me is by email.</p>
+      <div class="contact-row">
+        <a class="btn btn-primary" href="mailto:ggomezconejero@gmail.com">ggomezconejero@gmail.com</a>
+        <button class="btn" type="button" id="copy-email" data-email="ggomezconejero@gmail.com">Copy email</button>
+      </div>
+      <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Guillermo Gómez Conejero · Built with HTML, CSS and JavaScript · <a href="https://github.com/Goco36/goco36.github.io" target="_blank" rel="noopener noreferrer">Source</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
