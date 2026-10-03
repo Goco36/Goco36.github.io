@@ -1,32 +1,27 @@
 # goco36.github.io
 
-Source code of my personal portfolio: **https://goco36.github.io**
+My portfolio, written as a logbook: https://goco36.github.io
 
-A single static page built with plain HTML, CSS and JavaScript, with no frameworks or build step, and hosted on GitHub Pages.
+Plain HTML, CSS and a little JavaScript. No framework, no build step, hosted on GitHub Pages.
 
 ## Structure
 
 ```
-index.html   # content and layout (bento grid)
-styles.css   # dark theme, animations and responsive rules
-script.js    # "copy email" button
+index.html            # home: intro, index of projects and courses, contact
+projects/gg-01.html   # one page per project
+css/styles.css        # the whole design system (tokens at the top)
+js/main.js            # index filters and margin-note highlighting
+favicon.svg
 ```
 
-## Design decisions
+## Adding a project
 
-- **Bento grid:** content is organised as tiles of different sizes, grouped into Projects, Certificates and Contact.
-- **No frameworks or build step:** plain HTML, CSS and JavaScript. The only external request is Google Fonts (Bricolage Grotesque and Geist Mono).
-- **Accessible:** skip link, visible keyboard focus, and all animations disabled when the visitor has "reduce motion" turned on.
-- **Responsive:** four columns on desktop, two on tablets and one on phones.
+1. Copy `projects/gg-01.html` to `projects/gg-02.html` and replace the content.
+2. Add a row to the table in `index.html` with `data-tags` (`project`, `security`, `course`...).
+   The filter counts update on their own.
 
 ## Run locally
 
 ```bash
 python -m http.server 8000
 ```
-
-Then open http://localhost:8000.
-
-## License
-
-MIT

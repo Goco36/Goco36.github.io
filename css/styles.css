@@ -9,12 +9,12 @@
 /* 1. Tokens ------------------------------------------------------------- */
 :root {
   /* Color */
-  --paper: #fdfcf9;
-  --sheet: #ffffff;
+  --paper: #faf8f3;
+  --sheet: #fffefb;
   --ink: #1c1b19;
   --ink-2: #4a4740;
   --ink-3: #6b665c;
-  --rule: #e2ddd2;
+  --rule: #d9d3c7;
   --note: #b23a2b;        /* anotación: notas al margen y "qué falló" */
   --progress: #8a5a00;    /* estado "en curso" */
 
@@ -52,12 +52,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #262523;
-    --sheet: #2e2d2a;
+    --paper: #171613;
+    --sheet: #1f1d1a;
     --ink: #ece8df;
     --ink-2: #c4bfb4;
     --ink-3: #9d978b;
-    --rule: #403e3a;
+    --rule: #34312b;
     --note: #e0705f;
     --progress: #d9a441;
   }
@@ -408,7 +408,6 @@ pre code {
 
 .intro h1 {
   max-width: 16ch;
-  font-size: 3.5rem;  /* el nombre, un paso por encima del resto de titulares */
 }
 
 .intro .lede {
@@ -417,17 +416,6 @@ pre code {
   line-height: 1.45;
   color: var(--ink-2);
   max-width: 34em;
-}
-
-.intro .languages {
-  margin-top: var(--s-16);
-  font-family: var(--sans);
-  font-size: var(--fs-16);
-  color: var(--ink-2);
-}
-
-.intro .languages .meta {
-  margin-right: var(--s-8);
 }
 
 .intro .links {
@@ -664,7 +652,6 @@ pre code {
   body { font-size: 1.0625rem; }
 
   h1 { font-size: 2rem; }
-  .intro h1 { font-size: 2.375rem; }
 
   .intro { padding-top: var(--s-72); }
   .intro .lede,

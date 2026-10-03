@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GG-01 security-headers-checker — Guillermo Gómez Conejero</title>
+  <meta name="description" content="A Python command-line tool that checks a URL for HTTP security headers. What it does, what broke, and what I learned building it.">
+  <link rel="canonical" href="https://goco36.github.io/projects/gg-01.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="GG-01 · security-headers-checker">
+  <meta property="og:description" content="A Python CLI that checks HTTP security headers. What it does, what broke, and what I learned.">
+  <meta property="og:url" content="https://goco36.github.io/projects/gg-01.html">
+  <meta name="theme-color" content="#fdfcf9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#262523" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="wrap">
+    <header>
+      <nav class="site-nav" aria-label="Main">
+        <a class="name" href="index.html">Guillermo Gómez Conejero</a>
+        <ul>
+          <li><a href="index.html#log" aria-current="page">Projects</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#log">Projects</a></li>
+          <li aria-current="page">GG-01</li>
+        </ol>
+      </nav>
+    </header>
+
+    <main id="main">
+      <header class="entry-head grid">
+        <div class="col-read">
+          <span class="meta">GG-01 · Personal project · <time datetime="2026-09">2026·09</time></span>
+          <h1>security-headers-checker</h1>
+          <p class="summary">A Python command-line tool that checks a URL for HTTP security headers and explains which are missing, which look misconfigured, and which reveal details about the server.</p>
+        </div>
+      </header>
+
+      <div class="entry grid">
+        <article class="entry-body col-read">
+          <section aria-labelledby="problem">
+            <h2 id="problem">Problem</h2>
+            <p>Many websites ship without basic HTTP security headers, and nobody notices because the site still works. Checking them by hand means opening the browser's developer tools and knowing what to look for.</p>
+          </section>
+
+          <section aria-labelledby="why">
+            <h2 id="why">Why I built it</h2>
+            <p>I wanted to understand how these headers actually work, not just read about them, and to practise structuring a small Python project properly: a command-line interface, separated modules and tests.<a class="ref" href="#n1" aria-describedby="n1">†1</a></p>
+          </section>
+
+          <section aria-labelledby="what">
+            <h2 id="what">What I did</h2>
+            <p>The tool sends one GET request and evaluates the final response in three steps, each in its own module:</p>
+            <ul>
+              <li><strong>Fetch</strong> (<code>fetcher.py</code>): one request with a timeout, following redirects. Any network error becomes a single <code>FetchError</code>, so the rest of the program doesn't depend on the HTTP library.</li>
+              <li><strong>Evaluate</strong> (<code>checker.py</code>): header names are normalised to lowercase, because HTTP treats them as case-insensitive. Each header is checked against a rule defined as data in <code>rules.py</code>.</li>
+              <li><strong>Report</strong> (<code>cli.py</code>): a table or JSON, and exit code 1 when a high-severity header is missing, so it can be used in a CI pipeline.</li>
+            </ul>
+            <figure>
+<pre><code>$ python -m hdrcheck http://localhost:8000
+HEADER                       STATUS         SEVERITY
+Strict-Transport-Security    missing        high
+Content-Security-Policy      missing        high
+X-Content-Type-Options       missing        medium
+Server                       leak           info</code></pre>
+              <figcaption>Real output against Python's local development server (shortened).</figcaption>
+            </figure>
+          </section>
+
+          <section class="failed" aria-labelledby="failed">
+            <h2 id="failed">What broke</h2>
+            <p>An early version crashed on a malformed <code>max-age</code> value. I used <code>str.isdigit()</code> to validate it, but that accepts characters like <code>²</code> that <code>int()</code> rejects, so one odd header from a server brought the whole tool down.</p>
+            <p>I replaced the check with a <code>try/except ValueError</code> around <code>int()</code> and added a regression test with that exact value.<a class="ref" href="#n2" aria-describedby="n2">†2</a></p>
+            <p>Reviewing the output also showed two limitations I haven't fixed yet: a site that blocks framing with <code>frame-ancestors</code> in its CSP is still reported as missing <code>X-Frame-Options</code>, and a duplicated HSTS header gets the right status but a misleading message.</p>
+          </section>
+
+          <section aria-labelledby="learned">
+            <h2 id="learned">What I learned</h2>
+            <ul>
+              <li>Server input can't be trusted, even in a tool meant to inspect servers.</li>
+              <li>A header being present doesn't mean it's configured correctly.</li>
+              <li>Every network request needs a timeout, or the tool can hang forever.</li>
+              <li>Wrapping library errors in my own exception keeps the modules independent.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="next">
+            <h2 id="next">What I'd improve</h2>
+            <ul>
+              <li>Accept <code>frame-ancestors</code> as an alternative to <code>X-Frame-Options</code>.</li>
+              <li>Detect duplicated headers and report them clearly.</li>
+              <li>Check cookie flags (<code>Secure</code>, <code>HttpOnly</code>, <code>SameSite</code>).</li>
+              <li>Basic CSP weakness detection, such as <code>unsafe-inline</code>.</li>
+              <li>Run the tests automatically with GitHub Actions.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="log-title">
+            <h2 id="log-title">Log</h2>
+            <ol class="changelog">
+              <li><time datetime="2026-09-28">2026·09·28</time><span>v0.1 published: six header checks, JSON output, exit codes and 7 tests.</span></li>
+            </ol>
+          </section>
+        </article>
+
+        <aside class="factsheet col-margin" aria-label="Project facts">
+          <dl>
+            <div><dt>ID</dt><dd>GG-01</dd></div>
+            <div><dt>Type</dt><dd>Personal project</dd></div>
+            <div><dt>Role</dt><dd>Solo</dd></div>
+            <div><dt>Status</dt><dd><span class="status status--progress">v0.1 · ongoing</span></dd></div>
+            <div><dt>Stack</dt><dd>Python, requests, argparse, pytest</dd></div>
+            <div><dt>Code</dt><dd><a href="https://github.com/Goco36/security-headers-checker" rel="noopener">Goco36/security-headers-checker ↗</a></dd></div>
+            <div><dt>Demo</dt><dd>None: it's a command-line tool.</dd></div>
+          </dl>
+
+          <div class="notes">
+            <p class="note" id="n1"><span class="mark">†1</span> The project is small on purpose: one tool, done properly, before adding features.</p>
+            <p class="note" id="n2"><span class="mark">†2</span> The test is <code>test_hsts_with_non_numeric_max_age_is_misconfigured</code> in <code>tests/test_checker.py</code>.</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>Last revised <time datetime="2026-09-30">2026·09·30</time></span>
+      <span>Plain HTML and CSS · <a href="https://github.com/Goco36/goco36.github.io" rel="noopener">source ↗</a></span>
+    </footer>
+  </div>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
